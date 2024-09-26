@@ -16,9 +16,8 @@ struct text_info
     int count_size;
 
 } text;
-void sort_txt();
 
-const int line_len = 17;
+void sort_txt();
 
 int srav_elem(char* numm1, char* numm2, int mas_len_str, int mas_len_str1);
 
@@ -32,6 +31,7 @@ void swap_int(int* elem1, int* elem2);
 int main()
 {
     sort_txt();
+
     return 0;
 }
 
@@ -45,6 +45,7 @@ void make_text()
     if (st_scan == NULL )
     {
         printf("ERROR1");
+
         exit(1);
     }
 
@@ -57,6 +58,21 @@ void make_text()
             text.lines_count++;
         }
     }
+
+    rewind(st_scan);
+
+    text.count_size = 0;
+
+    while ( ! feof(st_scan))
+    {
+        if (fgetc(st_scan) != EOF )
+        text.count_size++;
+        //printf("%d",text.count_size);
+
+    }
+
+
+
 
     rewind(st_scan);
 
@@ -81,13 +97,11 @@ void make_text()
 
     rewind(st_scan);
 
-    int count_sizewrong = text.lines_count * line_len;
-
-    text.text = (char*) calloc(count_sizewrong, sizeof(char));
+    text.text = (char*) calloc(text.count_size, sizeof(char));
 
     text.numm = (char**) calloc(text.lines_count + 1, sizeof(char*));
 
-    text.count_size = (int) fread(text.text, sizeof(char), (size_t) count_sizewrong, st_scan);
+    fread(text.text, sizeof(char), (size_t) text.count_size, st_scan);
 
     text.numm[0] = text.text;
 
@@ -143,17 +157,38 @@ void sort_txt()
 
 int srav_elem(char* numm1, char* numm2, int mas_len_str1, int mas_len_str2)
 {
+    char* numm1_copy = numm1;
 
-    int i = 0;
+    char* numm2_copy = numm2;
 
-    while ((numm1)[i] ==  (numm2)[i]
-            && (numm1)[i] != '\n' && (numm2)[i] != '\n' || isalpha((numm1)[i]) == 0 || isalpha((numm2)[i]) == 0)
+    int mas_len_str1_copy = mas_len_str1;
+
+    int mas_len_str2_copy = mas_len_str2;
+
+    int i_2 = 0;
+
+    int i_1 = 0;
+
+    while (isalpha((numm1_copy)[i_1]) == 0)
     {
-        i++;
-        //printf("%c", (*numm1)[i]);
+        i_1++;
     }
 
-    return ((int) (numm1)[i]) - ((int) (numm2)[i]);
+    while (isalpha((numm2_copy)[i_2]) == 0)
+    {
+
+        i_2++;
+
+    }
+
+    while ((numm1_copy)[i_1] ==  (numm2_copy)[i_2] && (numm1_copy)[i_1] != '\n' && (numm2_copy)[i_2] != '\n')
+    {
+        i_1++;
+        i_2++;
+        //printf("%c", (*numm1_copy)[i]);
+    }
+
+    return ((int) (numm1_copy)[i_1]) - ((int) (numm2_copy)[i_2]);
 }
 
 
